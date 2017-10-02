@@ -7,15 +7,22 @@ $(document).ready(function(){
     .then(addTodos);
 
 
-$('#todoInput').keypress(function(e){
+    $('#todoInput').keypress(function(e){
     if(e.which == 13){
        createTodo();
-    }
-});    
+        }
+    });   
+
     //this function is still within the document.ready function above - specifically applies to spans within '.list' (ie those containing x)
     $('.list').on('click', 'span', function(e){
-    removeTodo($(this).parent());
-  })
+        //stops 'event' (ie click on 'x') from bubbling up and affecting whole li
+        e.stopPropagation();
+        removeTodo($(this).parent());
+     });
+  
+    $('.list').on('click', 'li', function(e){
+        updateTodo($(this));
+    });
 });
 
 function addTodos(todos){
@@ -31,6 +38,7 @@ function addTodo(todo){
     // opacity on li span is set to 0 as default with color on hover
     var newTodo = $('<li class="task">' +todo.name + '<span>X</span></li>');
     newTodo.data('id', todo._id);
+    newTodo.data('completed', todo.completed);
     if(todo.completed){
     newTodo.addClass("done");
     }
@@ -66,3 +74,19 @@ function removeTodo(todo){
         console.log(err);
     });
 }
+
+function updateTodo(todo){
+    var updateUrl = 'api/todo/' + todo.data('id');
+    //here updated data has to take form of string
+    var isDone = !todo.data('completed');
+    var updateData = {completed: isDone}
+    $.ajax({
+       method: 'PUT',
+       url: updateUrl,
+       data: updateData
+   })
+   .then(function(updatedTodo){
+       todo.toggleClass("done");
+       todo.data('completed', isDone);
+   })
+};
