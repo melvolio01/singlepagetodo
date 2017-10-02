@@ -4,6 +4,7 @@
   "description": "Single page todo app",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andy Hunt",
@@ -11,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.1",
-    "mongoose": "^4.11.14"
+    "mongoose": "^4.11.14",
+    "nodemon": "^1.12.1"
   }
 }
